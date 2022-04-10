@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Comparision Page</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <style>
+        body{
+            background-color:linear-gradient(133.38deg, #7942EE 5.99%, rgba(0, 0, 0, 0.85) 127.55%);
+            background-image:url('dp.jpg');
+        }
+        #heading{
+            position:absolute;
+            width: 604px;
+            height: 30px;
+            left: 370px;
+            top: 20px;
+
+            font-family: 'Cochin';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 54px;
+            line-height: 63px;
+            text-transform: capitalize;
+            color: #FFFFFF;
+        }
+        .radio{
+            position:absolute;
+            width: 1000px;
+            height: 90px;
+            left: 405px;
+            top: 130px;
+            font-family: 'Segoe UI';
+            font-style: normal;
+            font-weight: 100;
+            font-size: 20px;
+            line-height: 20px;
+            text-transform: capitalize;
+            color: #FFFFFF;
+        }
+            input[type="radio"]{
+                margin: 0 5px 0 45px;
+              }
+
+        .t1{
+            border-radius: 10px;
+            margin-left: 130px ;
+            margin-top: 200px;
+            margin-right:100px ;
+            width: 80%;
+            border: solid white 2px;
+            text-align: center;
+            
+
+        }
+
+        .t2{
+            border-radius: 7px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            margin-left: 100px;
+            margin-right: 10px;
+            width: 80%;
+            border: 2px solid white;
+            background: linear-gradient(90deg, rgb(51, 25, 107), rgba(237, 136, 38, 0.3) 100%);
+
+        }
+        #amazon{
+            border-radius: 12px;
+            color: white;
+            background-color: transparent;
+            border-color:white ;
+            padding: 10px;
+        }
+        #amazon:hover{
+              background-color:orange;
+             color: black;
+        }
+        #flipkart{
+            border-radius: 12px;
+            color: white;
+            background-color: transparent;
+            border-color:white ;
+            padding: 10px;
+        }
+        #flipkart:hover{
+              background-color:yellow;
+             color: blue;
+        }
+        .line{
+            border-left:4px solid black;
+            height:500px;
+        }
+        @media (max-width: 950px) {
+            .border-sm-start-none {
+                border-left: none !important;
+            }
+        }
+
+   </style>
+
+    
+</head>
+<body>
+    <h1 id="heading">Product Review Scrapper</h1>
+ 
+        <div class="radio"> 
+            <input type = "radio"
+            name = "choosing button"
+            id = "amazon"
+            value = "Amazon" />
+           <label for = "amazon">Amazon</label>
+
+           <input type = "radio"
+                 name = "choosing button"
+                 id = "flipkart"
+                 value = "Flipkart" />
+          <label for = "flipkart">Flipkart</label>
+      
+          <input type = "radio"
+                 name = "choosing button"
+                 id = "price"
+                 checked = "checked" 
+                 value = "price comparsion" />
+          <label for = "price">Price Comparison</label>
+        </div>
+        
+        <table class="t1">
+            <tr style="border-radius:10px;">
+              <th style="font-family: 'Segoe UI';
+              font-style:normal;
+              text-transform: capitalize;
+              color: #FFFFFF;text-align:'center';padding: 20px; border:solid white 2px; ">PRICE COMPARISON FOR POCO M2</th>
+            </tr>
+            <tr height="50">
+                <th><table class="t2" style="padding: 30%;" colspan="4">
+                    <tr>
+                        <td></td>
+                        <td><img src="https://www.electrorates.com/blogimg/Xiaomi_Poco_M2.png" alt="pocom2" width="80%" height="80%" border-right="100px";></td>
+                        <td >  </td>
+                        
+
+                        <td><img src="https://www.electrorates.com/blogimg/Xiaomi_Poco_M2.png" alt="pocom2" width="80%" height="80%" style="border-left: 5px black;"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 20px; color:white;">Product Name:</td>
+                        <td style="padding:20px;color:white;">POCO M2 Reloaded(Mostly Blue,64GB)(4GB RAM)</td>
+                         <td></td>
+                        
+                        <td style="padding: 20px;color:white;">POCO M2 Reloaded(Mostly Blue,64GB)(4GB RAM)</td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 20px;color:white;">Price:</td>
+                        <td style="padding:20px;color:white;">Rs 9,999</td>
+                         <td></td>
+                        
+
+                        <td style="padding: 20px;color:white;">Rs 9,999</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 20px;color:white;">Purchase Link:</td>
+                        <td style="padding:20px;color:white;"><a href="#"><button class="btn btn-primary"  id="flipkart">Flipkart</button></a></td>
+                       <td></td>
+                        
+                        <td style="padding: 20px;color:white;"><a href="#"><button class="btn btn-primary" id="amazon">Amazon</button></a></td>
+                    </tr>
+                </table></th>
+            </tr>
+                </table>
+    
+</body>
+</html>
