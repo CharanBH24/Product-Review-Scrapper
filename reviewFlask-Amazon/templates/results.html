@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Review Page</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+
+</head>
+
+<body>
+
+    <div class="table-users">
+        <div class="header">Reviews</div>
+
+        <table cellspacing="0">
+            <tr>
+                <th>Product</th>
+                <th>Name</th>
+                <th>Rating</th>
+                <th>Comment Heading</th>
+                <th width="300">Comments</th>
+                <!-- 230->300-->
+            </tr>
+            {% for review in reviews %}
+            <tr>
+                <td>{{review['Product']}}</td>
+                <td>{{review['Name']}}</td>
+                <td>{{review['Rating']}}</td>
+                <td>{{review['CommentHead']}}</td>
+                <td>{{review['Comment']}} </td>
+                {% endfor %}
+            </tr>
+            <!-- added /tr closing tag-->
+        </table>
+    </div>
+
+    <div align="center">
+        <form action="/prev" method="POST" style="display:inline">
+            {% if flag == 0 %}
+            <input type="submit" disabled value="Previous"> {% else %}
+            <input type="submit" s value="Previous"> {% endif %}
+        </form>
+        <span style="display:inline">{{page}}</span>
+        <form action="/next" method="post" style="display:inline">
+            <input type="submit" value="Next">
+        </form>
+    </div>
+
+    <br>
+
+</body>
+
+</html>
