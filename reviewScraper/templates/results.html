@@ -1,86 +1,323 @@
 <!DOCTYPE html>
-<html lang="en" >
 
-<head>
-  <meta charset="UTF-8">
-  <title>Review Page</title>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Review Page</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        background-image: url('../static/images/dp.jpg');
+        background-size: cover;
+        background-position: center center;
+        min-height: 100%;
+        text-align: center;
+      }
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-    <link rel="preconnect" href="http://127.0.0.1:5000/next">
+      #heading {
+        /*color: white;
+            font-size: 2.8em;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            text-align: center;*/
+        font-family: 'Apple SD Gothic Neo';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 3em;
+        line-height: 90px;
+        text-transform: capitalize;
+        color: #ffffff;
+        margin-top: 100px;
+      }
 
-      <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+      .btn-primary {
+        background-color: #f8e831 !important;
+        color: #047bd5;
+        outline-color: white;
+        border-radius: 16px;
+        font-weight: 600;
+      }
 
+      .form-check {
+        color: #ffffff;
+        font-size: large;
+      }
 
-</head>
+      @media (max-width: 767.98px) {
+        .border-sm-start-none {
+          border-left: none !important;
+        }
+      }
+    </style>
+  </head>
 
-<body>
-
-<form action="/filterReviews" style="display:block">
-    <p>Filter:</p>
-    <input type="radio" id="0" name="filter" value="-1"  checked="checked">
-    <label for="0">All</label>
-    <input type="radio" id="1" name="filter" value="1">
-    <label for="1">1</label>
-    <input type="radio" id="2" name="filter" value="2">
-    <label for="2">2</label>
-    <input type="radio" id="3" name="filter" value="3">
-    <label for="3">3</label>
-    <input type="radio" id="4" name="filter" value="4">
-    <label for="4">4</label>
-    <input type="radio" id="5" name="filter" value="5">
-    <label for="5">5</label>
-    <input type="submit" value="Filter">
-</form>
-
-<div class="table-users">
-   <div class="header">Reviews of {{prodName}}</div>
-
-   <table cellspacing="0">
-      <tr>
-         <th>Product</th>
-         <th>Name</th>
-         <th>Rating</th>
-         <th>Comment Heading</th>
-         <th width="230">Comments</th>
-      </tr>
-         {% for review in reviews %}
-      <tr>
-          <td>{{review['Product']}}</td>
-         <td>{{review['Name']}}</td>
-         <td>{{review['Rating']}}</td>
-         <td>{{review['CommentHead']}}</td>
-         <td>{{review['Comment']}} </td>
-      </tr>
-       {% endfor %}
-   </table>
-</div>
-
-<div align="center">
-    <form action="/prev" method="POST" style="display:inline">
-        {% if flag_prev == 0 %}
-        <input type="submit" disabled value="Previous">
-        {% else %}
-        <input type="submit"s value="Previous">
-        {% endif %}
-    </form>
-    <span style="display:inline">{{page}}</span>
-    <form action="/next" method="post" style="display:inline">
-        {% if flag_next == 0 %}
-        <input type="submit" disabled value="Next">
-        {% else %}
-        <input type="submit" value="Next">
-        {% endif %}
-    </form>
-    <div class="form">
-        <form action="/backtoSearch" method="POST">
-            <input type="submit" value="Back to Search Results">
-        </form>
+  <body>
+    <section id="heading">
+      <div id="headingA">Product Review Scrapper</div>
+    </section>
+    <br />
+    <div class="form-check form-check-inline">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="inlineRadioOptions"
+        id="inlineRadio1"
+        value="option1"
+        margin="5px"
+      />
+      <label class="form-check-label" for="inlineRadio1">Amazon</label>
     </div>
-</div>
 
-<br>
+    <div class="form-check form-check-inline">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="inlineRadioOptions"
+        id="inlineRadio2"
+        value="option2"
+        margin="5px"
+      />
+      <label class="form-check-label" for="inlineRadio2">Flipkart</label>
+    </div>
 
-</body>
+    <div class="form-check form-check-inline">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="inlineRadioOptions"
+        id="inlineRadio3"
+        value="option3"
+      />
+      <label class="form-check-label" for="inlineRadio3" margin="5px"
+        >Price Comparision</label
+      >
+    </div>
+    <section>
+      <div class="container py-5">
+        <div class="row justify-content-center mb-3">
+          <!--Page heading named review for a specific product-->
+          <h3
+            style="
+              color: #ffffff;
+              font-family: 'Apple SD Gothic Neo';
+              font-weight: normal;
+              border-style: solid;
+              border: black;
+            "
+          >
+            Reviews for POCO M2
+          </h3>
+          <br /><br />
+          <!--Page heading named review for a specific product ends-->
 
+          <div class="col-md-12 col-xl-10">
+            <div class="card shadow-0 border rounded-3">
+              <div
+                class="card-body"
+                style="
+                  background: linear-gradient(
+                    90deg,
+                    #ffffff -10.07%,
+                    #5d37ae 100%
+                  );
+                  border: 4px solid rgba(255, 255, 255, 0.38);
+                  border-radius: 10px;
+                "
+              >
+                <div class="row">
+                  <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                    <div
+                      class="bg-image hover-zoom ripple rounded ripple-surface"
+                    >
+                      <img
+                        src="{{prodImage}}"
+                        class="w-75"
+                        style="
+                          width: fit-content;
+                          height: inherit;
+                          left: 106px;
+                          top: 494px;
+                          border-right: 2px solid black;
+                          padding-right: 15px;
+                        "
+                      />
+                      <a href="#! " class="line">
+                        <div class="hover-overlay">
+                          <div class="mask"></div>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-lg-4 col-xl-4">
+                    <br /><br /><br />
+                    <!--Display Price-->
+                    <div class="d-flex flex-row align-items-center mb-1">
+                      <!--<h4 class="mb-1 me-1 ">13.99</h4>-->
+                      <img src="../static/images/price.png" />
+                      <p
+                        class="rating"
+                        style="
+                          font-size: 50px;
+                          position: relative;
+                          padding-left: 25px;
+                          padding-top: 10px;
+                          color: #080707;
+                          font-weight: bold;
+                        "
+                      >
+                        {{price}}
+                      </p>
+                    </div>
+                    <!--End-->
+                  </div>
+
+                  <div
+                    class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start"
+                  >
+                    <!--Review Count -->
+                    <div class="d-flex flex-row align-items-center mb-1">
+                      <!--<h4 class="mb-1 me-1 ">13.99</h4>-->
+                      <img src="../static/images/clipart3078264 1.png" />
+                      <p
+                        class="rating"
+                        style="
+                          font-size: 60px;
+                          position: relative;
+                          padding-left: 25px;
+                          padding-top: 10px;
+                          color: #ffffff;
+                          font-weight: bold;
+                        "
+                      >
+                        {{rating}}
+                      </p>
+                    </div>
+
+                    <p style="color: White">
+                      70 Golbal reviews have been given so far
+                    </p>
+                    <!--Review Count end-->
+                    <div class="d-flex flex-column mt-4">
+                      <button
+                        class="btn btn-primary btn-sm mt-2"
+                        type="button "
+                      >
+                        Flipkart
+                      </button>
+                    </div>
+                  </div>
+                  <hr />
+                  <!--Navbar Start-->
+
+                  <!--Navbar End-->
+                  <table class="table table-striped" style="column-gap: 140px">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col" style="margin-bottom: 50px">Heading</th>
+                        <th scope="col">
+                          <!-- <button
+                            class="btn btn-default dropdown-toggle"
+                            type="button"
+                            id="menu1"
+                            data-toggle="dropdown"
+                          >
+                            <strong>Ratings</strong>
+                            <ul
+                              class="dropdown-menu"
+                              role="menu"
+                              aria-labelledby="menu1"
+                            >
+                              <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="#"
+                                  >1 star</a
+                                >
+                              </li>
+                              <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="#"
+                                  >2 star</a
+                                >
+                              </li>
+                              <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="#"
+                                  >3 star</a
+                                >
+                              </li>
+                              <li role="presentation" class="divider"></li>
+                              <li role="presentation">
+                                <a
+                                  role="menuitem"
+                                  tabindex="-1"
+                                  href="#"
+                                  style="color: black"
+                                  >4 star</a
+                                >
+                              </li>
+                            </ul>
+                          </button> -->
+                          <div class="btn-group">
+                            <button
+                              type="button"
+                              class="btn btn-default dropdown-toggle"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                            >
+                              <strong>Rating</strong>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li>
+                                <a class="dropdown-item" href="#">1 star</a>
+                              </li>
+                              <li>
+                                <a class="dropdown-item" href="#">2 star</a>
+                              </li>
+                              <li>
+                                <a class="dropdown-item" href="#">3 star</a>
+                              </li>
+                              <li><hr class="dropdown-divider" /></li>
+                              <li>
+                                <a class="dropdown-item" href="#">4 star</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </th>
+                        <th scope="col">Review</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for comment in reviews %}
+                      <tr>
+                        <th scope="row">{{comment["Name"]}}</th>
+                        <td>{{comment["CommentHead"]}}</td>
+                        <td>{{comment["Rating"]}}</td>
+                        <td>{{comment["Comment"]}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+      integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+      integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>
