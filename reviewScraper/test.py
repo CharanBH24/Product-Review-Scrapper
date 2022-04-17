@@ -180,10 +180,11 @@ def index():
                 prod_html = bs(prodRes.text, "html.parser")
                 prodName = prod_html.findAll(
                     "span", {"class": "B_NuCI"})[0].text
-                prodImage = prod_html.find(class_="_396cs4")
+                prodImage = prod_html.find(class_=["_396cs4", "_2r_T1I"])
                 prodPrice = prod_html.find(class_="_30jeq3")
-                prodRating = prod_html.find(class_="_2d4LTz")
-                comms = prod_html.findAll("div", {"class": "col JOpGWq"})
+                prodRating = prod_html.find(class_=["_2d4LTz", "_3LWZlK"])
+                comms = prod_html.findAll(
+                    class_=["col JOpGWq", "_16PBlm _2RzJ9n"])
                 commentsLink = "https://www.flipkart.com" + \
                     comms[0].find_all('a')[-1]['href']
                 print(comms[0].find_all('a')[-1]['href'])
