@@ -263,29 +263,48 @@
                             </ul>
                           </button> -->
                           <div class="btn-group">
-                            <button
-                              type="button"
-                              class="btn btn-default dropdown-toggle"
-                              data-bs-toggle="dropdown"
-                              aria-expanded="false"
-                            >
-                              <strong>Rating</strong>
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li>
-                                <a class="dropdown-item" href="#">1 star</a>
-                              </li>
-                              <li>
-                                <a class="dropdown-item" href="#">2 star</a>
-                              </li>
-                              <li>
-                                <a class="dropdown-item" href="#">3 star</a>
-                              </li>
-                              <li><hr class="dropdown-divider" /></li>
-                              <li>
-                                <a class="dropdown-item" href="#">4 star</a>
-                              </li>
-                            </ul>
+                            <form action="/filterReviews" style="display:block" method="GET">
+                              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                              <button
+                                type="button"
+                                class="btn btn-default dropdown-toggle"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                              >
+                                <strong>Rating</strong>
+                              </button>
+                              <ul class="dropdown-menu" >
+                                <li>
+                                  <input type="submit" name="filter" value="-1" class="btn btn-default dropdown-item">
+                                  <span>All star</span>
+                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
+                                  <input type="submit" name="filter" value="1" class="btn btn-default dropdown-item">
+                                  <span>1 star</span>
+                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
+                                   <input type="submit" name="filter" value="2" class="btn btn-default dropdown-item">
+                                  <span>2 star</span>
+                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
+                                   <input type="submit" name="filter" value="3" class="btn btn-default dropdown-item">
+                                  <span>3 star</span>
+                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
+                                   <input type="submit" name="filter" value="4" class="btn btn-default dropdown-item">
+                                  <span>4 star</span>
+                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
+                                   <input type="submit" name="filter" value="5" class="btn btn-default dropdown-item">
+                                  <span>5 star</span>
+                                </li>
+                              </ul>
+                            </form>
                           </div>
                         </th>
                         <th scope="col">Review</th>
@@ -319,5 +338,30 @@
       integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
       crossorigin="anonymous"
     ></script>
+      <div align="center">
+        <form action="/prev" method="POST" style="display:inline">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            {% if flag_prev == 0 %}
+            <input type="submit" disabled value="Previous">
+            {% else %}
+            <input type="submit"s value="Previous">
+            {% endif %}
+        </form>
+        <span style="display:inline">{{page}}</span>
+        <form action="/next" method="post" style="display:inline">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            {% if flag_next == 0 %}
+            <input type="submit" disabled value="Next">
+            {% else %}
+            <input type="submit" value="Next">
+            {% endif %}
+        </form>
+        <div class="form">
+            <form action="/backtoSearch" method="POST">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                <input type="submit" value="Back to Search Results">
+            </form>
+        </div>
+    </div>
   </body>
 </html>
