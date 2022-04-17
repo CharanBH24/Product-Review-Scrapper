@@ -22,7 +22,7 @@
     <div class="table-users">
         <div class="header" style="display: grid;">Search Result</div>
         {% for res in searchResult %}
-        <form action="/review?link={{res['link']}}" method="post" style="display:inline">
+        <form action="/review?tracker={{res['tracker']}}" method="post" style="display:inline">
             <button style="display: block; width: 100%; font-size: 15px;">
            <table cellspacing="0">
                <tr>

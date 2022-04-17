@@ -17,6 +17,9 @@ ptA = 1
 nextLinkA = ''
 searchString = ''
 app = Flask(__name__)
+tracker=-1
+# links = []
+res=[]
 
 @app.route('/', methods=['GET'])  # route to display the home page
 @cross_origin()
@@ -40,6 +43,7 @@ def homePage():
 @app.route('/search', methods=['POST','GET'])
 @cross_origin()
 def search():
+    filetest = open("test.txt", "w")
     global pageReviews
     global searchString
     pageReviews={}
@@ -51,6 +55,7 @@ def search():
     page = requests.get(url, headers=headers, cookies=cookies)
     soup1 = bs(page.content, "html5lib")
     soup2 = bs(soup1.prettify(), features="lxml")
+    # filetest.write(str(soup2))
     names_price=soup2.find_all("a",class_=[re.compile("a-link-normal s-underline-text s-underline-link-text s-link-style a-text-normal"),"a-link-normal a-text-normal"])
     name_t=names_price[0::2]
     names=[]
@@ -74,25 +79,29 @@ def search():
         link = subbox.find_all("a", {"class": "a-link-normal"})
         if len(link[0]['href']) > 100:  # warning value 100 experimental
             # print("--0--")
-            productLink = "https://www.amazon.in" + link[0]['href']
+            productLink ="https://www.amazon.in"+ link[0]['href']
         elif len(link[1]['href']) > 100:
             # print("--1--")
-            productLink = "https://www.amazon.in" + link[1]['href']
+            productLink = "https://www.amazon.in"+ link[1]['href']
         elif len(link[2]['href']) > 100:
             # print("--2--")
-            productLink = "https://www.amazon.in" + link[2]['href']
+            productLink = "https://www.amazon.in"+ link[2]['href']
         else:
             # print("--3--")
-            productLink = "https://www.amazon.in" + link[3]['href']
+            productLink = "https://www.amazon.in"+ link[3]['href']
         links.append(productLink)
-
-    res=[]
+    # links=[]
+    global res
+    # res=[]
     for i in range(24):
         try:
-            res.append({'name':names[i].text.strip(),'price':prices[i].text.strip(),'rating':ratingA[i].strip(),'link':links[i]})
+            # res.append({'name':names[i].text.strip(),'price':prices[i].text.strip(),'rating':ratingA[i].strip(),'link':links[i],'tracker':i})
+            res.append({'name':names[i].text.strip(),'price':prices[i].text.strip(),'rating':ratingA[i].strip(),'link':links[i],'tracker':i})
         except:
             print("ending=",i,"\n")
             break
+    print(res)
+    filetest.close()
     return render_template('search.html', searchResult=res)
 
 # route to show the review comments in a web UI
@@ -106,6 +115,9 @@ def index():
     global ptA
     global nextLinkA
     global searchString
+    global tracker
+    # global links
+    global res
 
     reviews = []
 
@@ -115,7 +127,8 @@ def index():
     # make sure to reset pageReviewsA = {}
 
     if request.method == 'POST':
-        filetest = open("test.txt", "a")
+        # print(links)
+        filetest = open("test.txt", "w")
         commentsLinkA = ''
         commResA = ''
         comm_htmlA = ''
@@ -124,33 +137,12 @@ def index():
         # print(pageReviewsA,pageA)
         try:
             if pageReviewsA == {} and pageA == 1:
-                # searchString = request.form['content'].replace(" ", "+")
-                # url = "https://www.amazon.in/s?k=" + searchString
-                # page = requests.get(url, headers=headers, cookies=cookies)
-
-                # soup1 = bs(page.content, "html5lib")
-                # soup2 = bs(soup1.prettify(), features="lxml")
-
-                # bigboxes = soup2.findAll("div", {"class": "s-asin"})
-                # print("point-1")
-                # box = bigboxes[2]
-                # print("point-2")
-                # link = box.find_all("a", {"class": "a-link-normal"})
-                # if len(link[0]['href']) > 100:  # warning value 100 experimental
-                #     print("--0--")
-                #     productLink = "https://www.amazon.in" + link[0]['href']
-                # elif len(link[1]['href']) > 100:
-                #     print("--1--")
-                #     productLink = "https://www.amazon.in" + link[1]['href']
-                # elif len(link[2]['href']) > 100:
-                #     print("--2--")
-                #     productLink = "https://www.amazon.in" + link[2]['href']
-                # else:
-                #     print("--3--")
-                #     productLink = "https://www.amazon.in" + link[3]['href']
-                # # productLink = "https://www.flipkart.com" + box.div.div.div.a['href']
-                # print("point-3")
-                productLink = request.args.get('link')
+                # productLink = request.args.get('link')
+                productLink = request.args.get('tracker')
+                # print(res[int(productLink)]['name'])
+                productLink=res[int(productLink)]['link']                
+                # productLink="https://www.amazon.in"+productLink
+                # filetest.write("----",request.args.get('tracker'),"  ",res[int(productLink)]['name'],"  ",productLink,"----")
                 redo=1
                 while(redo>0 and redo<10):
                     try:
@@ -194,7 +186,6 @@ def index():
             while numA > 0:  # and pages > 1
                 commentboxes = comm_htmlA.findAll("div", {"data-hook": "review"})
                 # if pageA==2:    
-                #     filetest.writelines(str(commentboxes))      #debug
                 # if numA==10:
                 # filename = searchString + ".csv"
                 # fw = open(filename, "w")
@@ -254,7 +245,6 @@ def index():
 
                 try:
                     commentsLinkA = comm_htmlA.find("ul", {"class": "a-pagination"})
-                    filetest.write(str(commentsLinkA))
                     print("new-point-7")                
                     commentsLinkA = commentsLinkA.find("li", {"class": "a-last"}).a['href']
                     print("new-point-8")                
