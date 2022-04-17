@@ -71,39 +71,43 @@ def search():
     pt = 1
     if searchString == '':
         searchString = request.form['content']
-    flipkart_url = "https://www.flipkart.com/search?q=" + \
-        searchString.replace(" ", "+")
-    flipkartPage = requests.get(flipkart_url)
-    flipkart_html = bs(flipkartPage.content, "html5lib")
-    names = flipkart_html.findAll(class_=["_4rR01T", "s1Q9rs", "IRpwTa"])
-    prices = flipkart_html.findAll(class_="_30jeq3")
-    ratings = flipkart_html.find_all(class_="_3LWZlK")
-    links = flipkart_html.findAll(
-        "a", class_=["_1fQZEK", "_2rpwqI", "_2UzuFa"])
-    searchResult = []
-    for i in range(0, len(names)):
+        flipkart_url = "https://www.flipkart.com/search?q=" + \
+            searchString.replace(" ", "+")
+        flipkartPage = requests.get(flipkart_url)
+        flipkart_html = bs(flipkartPage.content, "html5lib")
+        names = flipkart_html.find(class_=["_1YokD2 _3Mn1Gg"]).find_all(
+            class_=["_4rR01T", "s1Q9rs", "IRpwTa"])
+        prices = flipkart_html.find(
+            class_=["_1YokD2 _3Mn1Gg"]).find_all(class_="_30jeq3")
+        ratings = flipkart_html.find(
+            class_=["_1YokD2 _3Mn1Gg"]).find_all(class_="_3LWZlK")
+        links = flipkart_html.find(class_=["_1YokD2 _3Mn1Gg"]).find_all(
+            "a", class_=["_1fQZEK", "_2rpwqI", "_2UzuFa"])
+        searchResult = []
+        for i in range(0, len(names)):
 
-        products = {}
+            products = {}
 
-        try:
-            products.update({"ProductName": names[i].get_text().strip()})
-        except:
-            products.update({"ProductName": "Unkown"})
+            try:
+                products.update({"ProductName": names[i].get_text().strip()})
+            except:
+                products.update({"ProductName": "Unkown"})
 
-        try:
-            products.update({"Rating": ratings[i].get_text().strip()}),
-        except:
-            products.update({"Rating": "No Rating Given"})
+            try:
+                products.update({"Rating": ratings[i].get_text().strip()}),
+            except:
+                products.update({"Rating": "No Rating Given"})
 
-        try:
-            products.update({"Price": prices[i].get_text().strip()}),
-        except:
-            products.update({"Price": "No Price Mentioned"})
+            try:
+                products.update({"Price": prices[i].get_text().strip()}),
+            except:
+                products.update({"Price": "No Price Mentioned"})
 
-        products.update({"Purchase Link": links[i].get("href")})
-        print(products)
-        searchResult.append(products)
-    context = {"Name": searchString.replace("+", " "), "ProductList": searchResult}
+            products.update({"Purchase Link": links[i].get("href")})
+            print(products)
+            searchResult.append(products)
+        context = {"Name": searchString.replace(
+            "+", " "), "ProductList": searchResult}
     return render_template('search.html', context=context)
 
 
@@ -164,7 +168,6 @@ def index():
     global prodImageFlipkart
     global pages
 
-
     reviews = []
 
     # ratingFilter = -1
@@ -195,10 +198,11 @@ def index():
             prod_html = bs(prodRes.text, "html.parser")
             prodNameFlipkart = prod_html.findAll(
                 "span", {"class": "B_NuCI"})[0].text
-            prodImageFlipkart = prod_html.find(class_="_396cs4")
+            prodImageFlipkart = prod_html.find(class_=["_396cs4", "_2r_T1I"])
             prodPriceFlipkart = prod_html.find(class_="_30jeq3")
-            prodRatingFlipkart = prod_html.find(class_="_2d4LTz")
-            comms = prod_html.findAll("div", {"class": "col JOpGWq"})
+            prodRatingFlipkart = prod_html.find(class_=["_2d4LTz", "_3LWZlK"])
+            comms = prod_html.findAll(
+                class_=["col JOpGWq", "_16PBlm _2RzJ9n"])
             commentsLink = "https://www.flipkart.com" + \
                 comms[0].find_all('a')[-1]['href']
             print(comms[0].find_all('a')[-1]['href'])
@@ -356,13 +360,17 @@ def filterReviews():
     pageReviews = {}
     pt = 1
     page = 1
-    ratingFilter = int(request.args.get('filter'))
+    try:
+        ratingFilter = int(request.args.get('filter'))
+    except:
+        ratingFilter = -1
     ratingFlag = 1
     return flask.redirect('/review', code=307)
 
+
 def getLoc(commentsLink, ratingFilter):
     global pages
-    if ratingFilter in [1,5,-1]:
+    if ratingFilter in [1, 5, -1]:
         print(commentsLink)
         return commentsLink
     else:
@@ -390,8 +398,10 @@ def getLoc(commentsLink, ratingFilter):
                 start = mid + 1
             else:
                 end = mid - 1
-        print("https://www.flipkart.com" + comm_html.find_all('a', {'class': '_1LKTO3'})[1]['href'])
+        print("https://www.flipkart.com" +
+              comm_html.find_all('a', {'class': '_1LKTO3'})[1]['href'])
         return "https://www.flipkart.com" + comm_html.find_all('a', {'class': '_1LKTO3'})[1]['href']
+
 
 if __name__ == "__main__":
     #app.run(host='127.0.0.1', port=8001, debug=True)
