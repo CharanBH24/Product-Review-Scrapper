@@ -6,10 +6,15 @@ from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen as uReq
 from requests_html import HTMLSession
 import html5lib
+import re
+import math
 # Global variables
 # total numAber of reviews per page
 numA = 10
-flagA = 0
+# flagA = 0
+flag_prevA = 0
+flag_nextA = 0
+currPageA=0
 pageReviewsA = {}
 pageA = 1
 ptA = 1
@@ -17,19 +22,24 @@ nextLinkA = ''
 searchString = ''
 app = Flask(__name__)
 
-
 @app.route('/', methods=['GET'])  # route to display the home page
 @cross_origin()
 def homePage():
     global numA
-    global flagA
+    # global flagA
+    global flag_prevA
+    global flag_nextA
+    global currPageA
     global pageReviewsA
     global pageA
     global ptA
     global nextLinkA
     global searchString
     numA = 10
-    flagA = 0
+    # flagA = 0
+    flag_prevA = 0
+    flag_nextA = 0
+    currPageA=0
     pageReviewsA = {}
     pageA = 1
     ptA = 1
@@ -37,18 +47,86 @@ def homePage():
     searchString = ''
     return render_template("index.html")
 
+@app.route('/search', methods=['POST','GET'])
+@cross_origin()
+def search():
+    filetest = open("test.txt", "w")
+    global currPageA
+    currPageA=0
+    global pageReviews
+    global searchString
+    pageReviews={}
+    cookies = {"location": "Vellore"}
+    headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36"}
+    searchString = request.form['content'].replace(" ", "+")
+    url = "https://www.amazon.in/s?k=" + searchString
+    page = requests.get(url, headers=headers, cookies=cookies)
+    soup1 = bs(page.content, "html5lib")
+    soup2 = bs(soup1.prettify(), features="lxml")
+    names_price=soup2.find_all("a",class_=[re.compile("a-link-normal s-underline-text s-underline-link-text s-link-style a-text-normal"),"a-link-normal a-text-normal"])
+    name_t=names_price[0::2]
+    names=[]
+    for name_txt in name_t:
+        names.append(name_txt.span)       
+    # names = flipkart_html.findAll("div", {"class": "_4rR01T"})
+    price_t=names_price[1::2]
+    prices=[]
+    for price_txt in price_t:
+        prices.append(price_txt.find("span",class_="a-offscreen")) 
+    # prices = flipkart_html.findAll("div", {"class": "_30jeq3 _1_WHN1"})
+    ratingA=[]
+    mainboxes = soup2.findAll("div", {"class": "s-asin"})
+    for subbox in mainboxes:
+        try:
+            ratingA.append(subbox.find("span", {"class": "a-icon-alt"}).text)
+        except:
+            ratingA.append("No rating")  
+    links = []
+    for subbox in mainboxes:
+        link = subbox.find_all("a", {"class": "a-link-normal"})
+        if len(link[0]['href']) > 100:  # warning value 100 experimental
+            # print("--0--")
+            productLink =link[0]['href']
+        elif len(link[1]['href']) > 100:
+            # print("--1--")
+            productLink =link[1]['href']
+        elif len(link[2]['href']) > 100:
+            # print("--2--")
+            productLink =link[2]['href']
+        else:
+            # print("--3--")
+            productLink =link[3]['href']
+        links.append(productLink)
+
+    res=[]
+    for i in range(24):
+        try:
+            res.append({'name':names[i].text.strip(),'price':prices[i].text.strip(),'rating':ratingA[i].strip(),'link':links[i]})
+        except:
+            print("ending=",i,"\n")
+            break
+    filetest.close()
+    return render_template('search.html', searchResult=res)
 
 # route to show the review comments in a web UI
 @app.route('/review', methods=['POST', 'GET'])
 @cross_origin()
 def index():
+    filetest = open("test.txt", "w")
     global numA
-    global flagA
+    # global flagA
+    global flag_prevA
+    global flag_nextA
+    global currPageA
     global pageReviewsA
     global pageA
     global ptA
     global nextLinkA
     global searchString
+    if currPageA==0:
+        currPageA=1
+    else:
+        currPageA+=1
 
     reviews = []
 
@@ -58,7 +136,6 @@ def index():
     # make sure to reset pageReviewsA = {}
 
     if request.method == 'POST':
-        filetest = open("test.txt", "a")
         commentsLinkA = ''
         commResA = ''
         comm_htmlA = ''
@@ -66,46 +143,23 @@ def index():
         headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36"}
         # print(pageReviewsA,pageA)
         try:
-            if pageReviewsA == {} and pageA == 1:
-                searchString = request.form['content'].replace(" ", "+")
-                url = "https://www.amazon.in/s?k=" + searchString
-                page = requests.get(url, headers=headers, cookies=cookies)
-
-                soup1 = bs(page.content, "html5lib")
-                soup2 = bs(soup1.prettify(), features="lxml")
-
-                bigboxes = soup2.findAll("div", {"class": "s-asin"})
-                print("point-1")
-                box = bigboxes[2]
-                print("point-2")
-                link = box.find_all("a", {"class": "a-link-normal"})
-                if len(link[0]['href']) > 100:  # warning value 100 experimental
-                    print("--0--")
-                    productLink = "https://www.amazon.in" + link[0]['href']
-                elif len(link[1]['href']) > 100:
-                    print("--1--")
-                    productLink = "https://www.amazon.in" + link[1]['href']
-                elif len(link[2]['href']) > 100:
-                    print("--2--")
-                    productLink = "https://www.amazon.in" + link[2]['href']
-                else:
-                    print("--3--")
-                    productLink = "https://www.amazon.in" + link[3]['href']
-                # productLink = "https://www.flipkart.com" + box.div.div.div.a['href']
-                print("point-3")
-                prodRes = requests.get(productLink, headers=headers, cookies=cookies)
-                soup3 = bs(prodRes.content, "html5lib")
-                soup4 = bs(soup3.prettify(), features="lxml")
-                # print(prod_html)
-                print("point-4")
-                # commsA=soup4.findAll("div", {"id": "reviews-medley-footer"})
+            if pageReviewsA == {} and pageA == 1:               
+                productLink = "https://www.amazon.in"+request.args.get('link')
                 redo=1
-                while(redo>0 and redo<10):
+                while(redo>0 and redo<5):
                     try:
+                        prodRes = requests.get(productLink, headers=headers, cookies=cookies)
+                        soup3 = bs(prodRes.content, "html5lib")
+                        soup4 = bs(soup3.prettify(), features="lxml")
+                        # print(prod_html)
+                        print("point-4")
+                # commsA=soup4.findAll("div", {"id": "reviews-medley-footer"})
                         commsA = soup4.find("a", {"data-hook": "see-all-reviews-link-foot"}).get('href')
                         commentsLinkA = "https://www.amazon.in" + commsA
                         redo=0
+                        break
                     except:
+                        print("\nreview access error",redo,"\n")
                         redo+=1
                 print("new-point-4")
                 # print("--------------------------",commentsLinkA,"---------------------------","\n")
@@ -118,21 +172,42 @@ def index():
                 commResA = requests.get(commentsLinkA, headers=headers, cookies=cookies)
                 soup3 = bs(commResA.content, "html5lib")
                 comm_htmlA = bs(soup3.prettify(), features="lxml")
-
+            # filetest.write(str(commentsLinkA)+"\n\n")
+            # filetest.write(commentsLinkA,"\n")
             print("new-point-5")                
             # Total numAber of pages in reviews
-            # pages = int(comm_htmlA.find_all('div', {'class': '_2MImiq _1Qnn1K'})[0].span.text.split()[-1])            #cannot solve in amazon, skipping it
-
-            if pageA == 1:
-                flagA = 0
+            # pages = int(comm_htmlA.find_all('div', {'class': '_2MImiq _1Qnn1K'})[0].span.text.split()[-1]) 
+            try:           #cannot solve in amazon, skipping it
+                pages=comm_htmlA.find("div", {"data-hook": "cr-filter-info-review-rating-count"}).span.text.strip()  #13,439 global ratings | 1,846 global reviews
+                st=pages.find('global ratings | ')
+                st=st+17
+                ed=pages[st:].find(' ')+st
+                pgs=pages[st:ed]
+                pgs=pgs[0:pgs.find(',')]+pgs[pgs.find(',')+1:]
+                pages=(math.ceil(int(pgs)/10))
+            except:
+                pages=comm_htmlA.find("div", {"data-hook": "cr-filter-info-review-rating-count"}).text.strip()  #13,439 total ratings, 1,846 with reviews
+                st=pages.find('total ratings, ')
+                st=st+15
+                ed=pages[st:].find(' ')+st
+                pgs=pages[st:ed]
+                pgs=pgs[0:pgs.find(',')]+pgs[pgs.find(',')+1:]
+                pages=(math.ceil(int(pgs)/10))
+                
+            if pages==currPageA:
+                flag_nextA = 0
             else:
-                flagA = 1
+                flag_nextA = 1
+            if pageA == 1:
+                flag_prevA = 0
+            else:
+                flag_prevA = 1
 
             if pageA in pageReviewsA.keys():
-                return render_template('results.html', reviews=pageReviewsA[pageA], flag=flagA, page=pageA)
+                return render_template('results.html', reviews=pageReviewsA[pageA],flag_prev=flag_prevA,flag_next=flag_nextA, page=pageA)
 
             print("--------------------------",commentsLinkA,"---------------------------","\n") #debug
-            while numA > 0:  # and pages > 1
+            while numA > 0 and pages > 1:
                 commentboxes = comm_htmlA.findAll("div", {"data-hook": "review"})
                 # if pageA==2:    
                 #     filetest.writelines(str(commentboxes))      #debug
@@ -182,8 +257,11 @@ def index():
                         print("Exception while creating dictionary: ", e)
 
                     mydict = {"Product": searchString, "Name": name, "Rating": rating,"CommentHead": commentHead, "Comment": custComment}
+
+                    #filtering outliers or as according to rating filter
+                    # if (mydict["Rating"] != 'No Rating' and ratingFilter==-1) or mydict["Rating"] == str(ratingFilter):
                     reviews.append(mydict)
-                    numA -= 1  # numAber of reviews to be limited to 10 per pageA
+                    numA -= 1  #numAber of reviews to be limited to 10 per page
                     ptA = i
                     if numA == 0:
                         break
@@ -195,7 +273,7 @@ def index():
 
                 try:
                     commentsLinkA = comm_htmlA.find("ul", {"class": "a-pagination"})
-                    filetest.write(str(commentsLinkA))
+                    # filetest.write(str(commentsLinkA))
                     print("new-point-7")                
                     commentsLinkA = commentsLinkA.find("li", {"class": "a-last"}).a['href']
                     print("new-point-8")                
@@ -217,7 +295,7 @@ def index():
             pageReviewsA[pageA] = reviews
             print("point-6")
             # print("-----------------------------------------------------------------\n")
-            return render_template('results.html', reviews=reviews[0:(len(reviews))])
+            return render_template('results.html', reviews=reviews,flag_prev=flag_prevA, flag_next=flag_nextA, page=pageA)
         except Exception as e:
             print('The Exception message is: ', e)
             return 'something is wrong'
