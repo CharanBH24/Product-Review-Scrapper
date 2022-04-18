@@ -252,7 +252,7 @@ def index():
 
         print('2')
         if page in pageReviews.keys():
-            return render_template('results.html', reviews=pageReviews[page], flag_prev=flag_prev, flag_next=flag_next, page=page, prodName=prodNameFlipkart, prodImage=prodImageFlipkart.get("src"), price=prodPriceFlipkart.get_text().strip(), rating=prodRatingFlipkart.get_text().strip())
+            return render_template('results.html', reviews=pageReviews[page], flag_prev=flag_prev, flag_next=flag_next, page=page, prodName=prodNameFlipkart, prodImage=prodImageFlipkart.get("src"), price=prodPriceFlipkart.get_text().strip(), rating=prodRatingFlipkart.get_text().strip(), link=productLink)
 
         while num > 0 and pages > 1:
             print('3')
@@ -321,7 +321,7 @@ def index():
         if pageReviews != {} and page != 1:
             reviews = reviews[1:]
         pageReviews[page] = reviews
-        return render_template('results.html', reviews=reviews, flag_prev=flag_prev, flag_next=flag_next, page=page, prodName=prodNameFlipkart, prodImage=prodImageFlipkart.get("src"), price=prodPriceFlipkart.get_text().strip(), rating=prodRatingFlipkart.get_text().strip())
+        return render_template('results.html', reviews=reviews, flag_prev=flag_prev, flag_next=flag_next, page=page, prodName=prodNameFlipkart, prodImage=prodImageFlipkart.get("src"), price=prodPriceFlipkart.get_text().strip(), rating=prodRatingFlipkart.get_text().strip(), link=productLink)
     except Exception as e:
         print('The Exception message is: ', e)
         return 'something is wrong'

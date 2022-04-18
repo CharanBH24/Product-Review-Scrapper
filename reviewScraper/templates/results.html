@@ -15,7 +15,12 @@
     />
     <style>
       body {
-        background-image: url('../static/images/dp.jpg');
+        /*background-image: url('../static/images/dp.jpg');*/
+        background-image: linear-gradient(
+          133.38deg,
+          #7942ee 5.99%,
+          rgba(0, 0, 0, 0.85) 127.55%
+        );
         background-size: cover;
         background-position: center center;
         min-height: 100%;
@@ -112,7 +117,7 @@
               border: black;
             "
           >
-            Reviews for POCO M2
+            Reviews for {{prodName}}
           </h3>
           <br /><br />
           <!--Page heading named review for a specific product ends-->
@@ -199,18 +204,19 @@
                         {{rating}}
                       </p>
                     </div>
-
                     <p style="color: White">
-                      70 Golbal reviews have been given so far
+                      7k Global reviews have been given so far
                     </p>
                     <!--Review Count end-->
                     <div class="d-flex flex-column mt-4">
-                      <button
-                        class="btn btn-primary btn-sm mt-2"
-                        type="button "
-                      >
-                        Flipkart
-                      </button>
+                      <form action="{{link}}" method="post">
+                        <button
+                          class="btn btn-primary btn-sm mt-2"
+                          type="submit"
+                        >
+                          Flipkart
+                        </button>
+                      </form>
                     </div>
                   </div>
                   <hr />
@@ -319,7 +325,7 @@
                                 <li>
                                   <input
                                     type="submit"
-                                    name="filter"
+                                    na`me="filter"
                                     value="3 "
                                     class="btn btn-default dropdown-item"
                                   />
