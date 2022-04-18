@@ -1,0 +1,61 @@
+@import '//netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css';
+.form-control::placeholder {
+  color: white;
+}
+#backgroundColor {
+  background-image:linear-gradient(133.38deg, #7942EE 5.99%, rgba(0, 0, 0, 0.85) 127.55%);
+  height: 100vh;
+}
+#heading {
+  color: white;
+  font-size: 2.8em;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  text-align: center;
+  font-weight: bold;
+}
+#subheading {
+  font-size: 2em;
+  color: #F6A85CE0;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  text-align: center;
+}
+#searchBar {
+  border-radius: 15px;
+  width: 50%;
+  background: transparent;          
+  background-repeat: no-repeat;
+  text-indent: 20px;
+  border-width: 2px;
+  color:white;
+}
+#searchBar:hover {
+  border-radius: 43px;
+  width: 50%;
+  background: black;
+  border-width: 2px;
+  color: white;
+}
+input.form-control:focus{
+    outline: none;
+    box-shadow: none;
+}
+#buttonStyle{
+  width: 15%;
+  border-radius: 43px;
+  background: transparent;
+  color: white;
+  border:1px solid white
+}
+#buttonStyle:hover {
+  width: 15%;
+  border-radius: 34px;
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+  font-weight: bold;
+}
+
+button:focus{
+  outline:none;
+  box-shadow: none;
+}
