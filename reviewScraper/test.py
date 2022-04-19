@@ -26,6 +26,7 @@ prodImageFlipkart = ''
 prodPriceFlipkart = ''
 prodRatingFlipkart = ''
 pages = 0
+productLink = ''
 
 app = Flask(__name__)
 csrf = CSRFProtect(app)
@@ -153,6 +154,7 @@ def searchNew():
 @cross_origin()
 def index():
     global num
+    global productLink
     global flag_prev
     global flag_next
     global pageReviews
@@ -361,6 +363,7 @@ def filterReviews():
     pt = 1
     page = 1
     try:
+        print('FILTER', request.args.get('filter'))
         ratingFilter = int(request.args.get('filter'))
     except:
         ratingFilter = -1

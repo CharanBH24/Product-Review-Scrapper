@@ -270,7 +270,7 @@
                           </button> -->
                           <div class="btn-group">
                             <form
-                              action="/filterReviews"
+                              action="{{url_for('filterReviews')}}"
                               style="display: block"
                               method="GET"
                             >
@@ -315,18 +315,7 @@
                                   <input
                                     type="submit"
                                     name="filter"
-                                    value="2 "
-                                    class="btn btn-default dropdown-item"
-                                  />
-                                </li>
-                                <li>
-                                  <hr class="dropdown-divider" />
-                                </li>
-                                <li>
-                                  <input
-                                    type="submit"
-                                    na`me="filter"
-                                    value="3 "
+                                    value="2"
                                     class="btn btn-default dropdown-item"
                                   />
                                 </li>
@@ -337,7 +326,7 @@
                                   <input
                                     type="submit"
                                     name="filter"
-                                    value="4 "
+                                    value="3"
                                     class="btn btn-default dropdown-item"
                                   />
                                 </li>
@@ -348,7 +337,18 @@
                                   <input
                                     type="submit"
                                     name="filter"
-                                    value="5 "
+                                    value="4"
+                                    class="btn btn-default dropdown-item"
+                                  />
+                                </li>
+                                <li>
+                                  <hr class="dropdown-divider" />
+                                </li>
+                                <li>
+                                  <input
+                                    type="submit"
+                                    name="filter"
+                                    value="5"
                                     class="btn btn-default dropdown-item"
                                   />
                                 </li>

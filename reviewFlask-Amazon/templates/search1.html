@@ -1,0 +1,179 @@
+<!-- <!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Search Results for {{searchString}}</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        td{
+        width: 20%;
+        }
+    </style>
+
+
+</head>
+
+<body>
+<div class="form" align="center">
+        <form action="/searchNew" method="POST">
+            <input type="text" name="content" id="content" value="{{searchString}}">
+            <input type="submit" value="Search">
+        </form>
+</div>
+ <div class="table-users">
+   <div class="header" style="display: grid;">Search Results for {{searchString}}</div>
+   {% for res in searchResult %}
+   <form action="/review?link={{res['link']}}" method="post" style="display:inline">
+       <button style="display: block; width: 100%; font-size: 15px;">
+           <table cellspacing="0">
+               <tr>
+                  <td>{{res['name']}}</td>
+                 <td>{{res['price']}}</td>
+                 <td>
+                     {% for i in res['features'] %}
+                     {{i}}
+                     <br>
+                     {% endfor %}
+                 </td>
+               </tr>
+           </table>
+       </button>
+   </form>
+       {% endfor %}
+ </div>
+</body> -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style2.css') }}"
+    />
+    <style>
+        .redColor{
+          display: inherit;
+        background-color: red;
+        border-radius: 3px;
+        width: min-content;
+        padding: 2px;
+      }
+      .form-check {
+            color: #FFFFFF;
+            font-size: large;
+        }
+      .orangeColor
+      {
+        display: inherit;
+      background-color: orange;
+      border-radius: 3px;
+      width: min-content;
+      padding: 2px;
+      }
+
+    .greenColor{
+      display: inherit;
+        background-color: green;
+        border-radius: 3px;
+        width: min-content;
+        padding: 2px;
+      }
+    </style>
+    <title>Product List Page</title>
+  </head>
+  <body id="backgroundColor">
+      <div class="container p-5">
+        <div class="column">
+          <div class="row mb-3">
+            <div id="heading">Product Review Scrapper</div>
+          </div>
+          <form action="/searchAmazon" method="POST">
+          <div class="form-check form-check-inline">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <input class="form-check-input" type="submit" name="inlineRadioOptions" id="inlineRadio1" value="option1" margin="5px">
+        <label class="form-check-label" for="inlineRadio1">Amazon</label>
+    </div>
+    </form>
+
+    <form action="/searchFlipkart" method="POST">
+    <div class="form-check form-check-inline">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <input class="form-check-input" type="submit" name="inlineRadioOptions" id="inlineRadio2" value="option2" margin="5px">
+        <label class="form-check-label" for="inlineRadio2">Flipkart</label>
+    </div>
+    </form>
+          <div class="column" id="content">
+            <div class="row">
+              <table style="padding-top: 7px;" class="table">
+                <thead>
+               <tr>
+                 <th scope="col" colspan="4" id="contentHeading">SEARCH RESULTS FOR {{context.Name}}</th>
+               </tr>
+               </thead>
+               <tbody style="padding-left: 5px;">
+                {% for product in context.ProductList %}
+                 <tr style="vertical-align: baseline;">
+                   <td style="color: white;font-size: 1em;">{{product.get("name")}}</td>
+                   <td style="color: white;font-size: 1em;">{{product.get("price")}}</td>
+                   <td style="color: white;font-size: 1em;">
+                    <div> 
+                      {{product.get("rating")}} <span class="fa fa-star"></span>
+                    </div>
+                    </td>
+                   <td>
+                    <form action="/reviewFlipkart" method="POST">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                      <button type="submit" name="link" value ="{{product.get('link')}}" class="btn btn-outline-warning">FLIPKART</button>
+                  </form>
+                   </td>
+                 </tr>
+                 {% endfor %}
+               </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="row">
+            <button type="submit" class="m-auto btn btn-primary mt-3" id="buttonStyle">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      var table = document.querySelectorAll('tr');
+      var maxRating = 5.0;
+      for (let i = 1; i < table.length; i++) {
+        let rating = document.querySelectorAll("tr")[i].children[2].childNodes[1].innerText;
+        rating = parseFloat(rating);
+        if (rating >= 4.0) {
+          document.querySelectorAll("tr")[i].children[2].childNodes[1].classList.add("greenColor")
+        } else if (rating >= 3.0) {
+          document.querySelectorAll("tr")[i].children[2].childNodes[1].classList.add("orangeColor")
+        } else if(rating>=0.0) {
+          document.querySelectorAll("tr")[i].children[2].childNodes[1].classList.add("redColor")
+        }
+        else{
+          document.querySelectorAll("tr")[i].children[2].childNodes[1].childNodes[1].remove()
+        }
+      }
+    </script>
+  </body>
+</html>
